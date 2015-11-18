@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Bikepool</string>
     <string name="title_activity_bike_pool_map">Map</string>
+    <string name="title_fragment_bike_pool_list">List</string>
 </resources>
