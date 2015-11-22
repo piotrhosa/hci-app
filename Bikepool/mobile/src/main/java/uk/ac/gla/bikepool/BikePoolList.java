@@ -25,5 +25,4 @@ public class BikePoolList extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         // TODO
     }
-
 }
