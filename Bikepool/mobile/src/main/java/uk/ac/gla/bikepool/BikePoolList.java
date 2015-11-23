@@ -3,7 +3,6 @@ package uk.ac.gla.bikepool;
 import java.util.ArrayList;
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.widget.SimpleAdapter;
 import android.widget.ListView;
 import android.view.View;
 
@@ -14,7 +13,7 @@ public class BikePoolList extends ListFragment {
         super.onCreate(savedInstanceState);
         ArrayList<BikePool> values = new ArrayList<BikePool>();
         values.add(new BikePool("pool 1"));
-        BikePoolListAdapter adapter = new BikePoolListAdapter(getActivity(), R.layout.list_item_pool_list, values);
+        BikePoolListAdapter adapter = new BikePoolListAdapter(getActivity(), R.layout.frag_bike_pool_list, values);
         setListAdapter(adapter);
     }
 
@@ -26,5 +25,4 @@ public class BikePoolList extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         // TODO
     }
-
 }

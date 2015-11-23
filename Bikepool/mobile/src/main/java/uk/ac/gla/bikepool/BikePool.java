@@ -4,17 +4,29 @@ import android.location.Location;
 
 public class BikePool {
 
+    private int mId;
     private String mName;
     private Location mStartLocation;
     private Location mFinishLocation;
     private int mMembersNo;
+    private int[] mWeekDays;
+    private String mStartTime;
+    private String mDuration;
 
     public BikePool(String name) {
+        mId = 0;
         mName = name;
         mStartLocation = null;
         mFinishLocation = null;
         mMembersNo = 0;
+        mWeekDays = new int[7];
+        mStartTime = "0:00";
+        mDuration = "0:00";
     }
+
+    public int getId() {return mId;}
+
+    public void setId(int id) {mId = id;}
 
     public String getName() {return mName;}
 
@@ -26,9 +38,29 @@ public class BikePool {
 
     public Location getFinishLocation() {return mFinishLocation;}
 
-    public void setmFinishLocation(Location finishLocation) {mFinishLocation = finishLocation;}
+    public void setFinishLocation(Location finishLocation) {mFinishLocation = finishLocation;}
 
     public int getMembersNo() {return mMembersNo;}
 
     public void setMembersNo(int membersNo) {mMembersNo = membersNo;}
+
+    public int[] getWeekDays() {return mWeekDays;}
+
+    public String getWeekDaysString() {
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < mWeekDays.length; i++)
+            strBuilder.append(mWeekDays[i]);
+
+        return strBuilder.toString();
+    }
+
+    public String getStartTime() {return mStartTime;}
+
+    public String getDuration() {return mDuration;}
+
+    public void setWeekDays(int[] weekDays) {mWeekDays = weekDays;}
+
+    public void setStartTime(String startTime) {mStartTime = startTime;}
+
+    public void setDuration(String duration) {mDuration = duration;}
 }
