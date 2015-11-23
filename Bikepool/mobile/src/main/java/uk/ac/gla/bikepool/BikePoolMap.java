@@ -1,16 +1,23 @@
 package uk.ac.gla.bikepool;
 
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BikePoolMap extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private HashMap<Marker, BikePool> mMarkersHashMap;
+    private ArrayList<BikePool> bikePoolsArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +56,37 @@ public class BikePoolMap extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
+                plotMarkers(createMarkers());
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(com.google.android.gms.maps.model.Marker marker) {
+                        marker.showInfoWindow();
+                        return true;
+                    }
+                });
             }
         }
+    }
+
+    private void plotMarkers(ArrayList<BikePool> pools) {
+        mMarkersHashMap = new HashMap<>();
+        if(pools.size() > 0) {
+            for (BikePool bikepool : pools) {
+                // Create user marker with custom icon and other options
+                MarkerOptions markerOption = new MarkerOptions().position(new LatLng(bikepool.getStartLocation().getLatitude(), bikepool.getStartLocation().getLongitude()));
+                //markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.currentlocation_icon));
+
+                Marker currentMarker = mMap.addMarker(markerOption);
+                mMarkersHashMap.put(currentMarker, bikepool);
+
+                mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this,mMarkersHashMap));
+            }
+        }
+    }
+
+    public ArrayList<BikePool> createMarkers(){
+        bikePoolsArray.add(new BikePool("").setStartLocation(new Location(Constants.locationProvider)));
+        return bikePoolsArray;
     }
 
     /**

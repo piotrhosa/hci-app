@@ -1,16 +1,37 @@
 package uk.ac.gla.bikepool;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+    Button mapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        hookButtons();
+    }
+
+    public void hookButtons(){
+        mapButton = (Button) findViewById(R.id.map_btn);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMapActivity();
+            }
+        });
+    }
+
+    public void startMapActivity(){
+        Intent myIntent = new Intent(MainActivity.this, BikePoolMap.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        startActivity(myIntent);
     }
 
     @Override
