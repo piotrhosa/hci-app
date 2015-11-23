@@ -24,6 +24,28 @@ public class BikePool {
         mDuration = "0:00";
     }
 
+    public BikePool(String name, Location startLocation) {
+        mId = 0;
+        mName = name;
+        mStartLocation = startLocation;
+        mFinishLocation = null;
+        mMembersNo = 0;
+        mWeekDays = new int[7];
+        mStartTime = "0:00";
+        mDuration = "0:00";
+    }
+
+    public BikePool(String name, Location startLocation, Location endLocation) {
+        mId = 0;
+        mName = name;
+        mStartLocation = startLocation;
+        mFinishLocation = endLocation;
+        mMembersNo = 0;
+        mWeekDays = new int[7];
+        mStartTime = "0:00";
+        mDuration = "0:00";
+    }
+
     public int getId() {return mId;}
 
     public void setId(int id) {mId = id;}

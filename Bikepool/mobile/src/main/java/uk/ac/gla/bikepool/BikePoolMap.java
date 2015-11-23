@@ -85,7 +85,10 @@ public class BikePoolMap extends FragmentActivity {
     }
 
     public ArrayList<BikePool> createMarkers(){
-        bikePoolsArray.add(new BikePool("").setStartLocation(new Location(Constants.locationProvider)));
+        Location location = new Location(Constants.locationProvider);
+        location.setLatitude(55.872094);
+        location.setLongitude(-4.285022);
+        bikePoolsArray.add(new BikePool("", location));
         return bikePoolsArray;
     }
 
