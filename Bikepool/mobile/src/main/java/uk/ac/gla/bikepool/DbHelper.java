@@ -7,6 +7,9 @@ import android.content.Context;
 import android.location.Location;
 import android.content.ContentValues;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "BIKEPOOL_DB";
@@ -45,9 +48,16 @@ public class DbHelper extends SQLiteOpenHelper {
                 "rank DOUBLE )";
 
         db.execSQL(CREATE_POOL_TABLE);
+        db.execSQL(CREATE_USER_TABLE);
     }
-    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {}
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + POOLS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE);
+
+        this.onCreate(db);
+    }
     public void addPool(BikePool pool) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -68,7 +78,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void getPool(int id) {
+    public BikePool getPool(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor =
@@ -82,6 +92,91 @@ public class DbHelper extends SQLiteOpenHelper {
                         null); // h. limit
 
         if (cursor != null) cursor.moveToFirst();
+        else return null;
+
+        return makeBikePool(cursor);
+    }
+
+    public List<BikePool> getAllPools() {
+        List<BikePool> pools = new ArrayList<BikePool>();
+
+        String query = "SELECT  * FROM " + POOLS_TABLE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        BikePool pool = null;
+        if (cursor.moveToFirst()) {
+            do {
+                pools.add(makeBikePool(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        return pools;
+    }
+
+    public void addUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("name", user.getName());
+        values.put("thumbnailUrl", user.getThumbnailUrl());
+        values.put("rank", user.getRank());
+
+        db.insert(USERS_TABLE, null, values);
+        db.close();
+    }
+
+    public User getUser(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor =
+                db.query(USERS_TABLE, // a. table
+                        USERS_COLS, // b. column names
+                        " id = ?", // c. selections
+                        new String[]{String.valueOf(id)}, // d. selections args
+                        null, // e. group by
+                        null, // f. having
+                        null, // g. order by
+                        null); // h. limit
+
+        if (cursor != null) cursor.moveToFirst();
+        else return null;
+
+        return makeUser(cursor);
+    }
+
+    public List<User> getAllUsers() {
+        List<User> pools = new ArrayList<User>();
+
+        String query = "SELECT  * FROM " + USERS_TABLE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                pools.add(makeUser(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        return pools;
+    }
+
+    private User makeUser(Cursor cursor) {
+
+        User user = new User();
+        user.setId(Integer.parseInt(cursor.getString(0)));
+        user.setName(cursor.getString(1));
+        user.setThumbnailUrl(cursor.getString(2));
+        user.setRank(Double.parseDouble(cursor.getString(3)));
+
+        return user;
+    }
+
+    private BikePool makeBikePool(Cursor cursor) {
+
         BikePool pool = new BikePool(cursor.getString(1));
         pool.setId(Integer.parseInt(cursor.getString(0)));
         pool.setName(cursor.getString(2));
@@ -100,24 +195,7 @@ public class DbHelper extends SQLiteOpenHelper {
         pool.setWeekDays(intArray);
         pool.setStartTime(cursor.getString(9));
         pool.setDuration(cursor.getString(10));
+
+        return pool;
     }
-
-    public void getAllPools() {
-        // TODO
-    }
-
-    public void addUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-
-        values.put("name", user.getName());
-        values.put("thumbnailUrl", user.getThumbnailUrl());
-        values.put("rank", user.getRank());
-
-        db.insert(USERS_TABLE, null, values);
-        db.close();
-    }
-
-
 }

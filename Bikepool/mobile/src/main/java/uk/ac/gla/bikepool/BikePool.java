@@ -13,6 +13,8 @@ public class BikePool {
     private String mStartTime;
     private String mDuration;
 
+    public BikePool() {}
+
     public BikePool(String name) {
         mId = 0;
         mName = name;
