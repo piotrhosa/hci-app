@@ -18,9 +18,9 @@ public class BikePoolListFragment extends ListFragment {
 
         ArrayList<BikePool> values = new ArrayList<BikePool>();
         DbHelper db = new DbHelper(getActivity());
-        //Location start = new Location("noProvider");
-        //Location finish = new Location("noProvider");
-        //db.addPool(new BikePool("pool 1", start, finish));
+        Location start = new Location("noProvider");
+        Location finish = new Location("noProvider");
+        db.addPool(new BikePool("pool 1", start, finish, "start", "finish"));
         values = db.getAllPools();
         BikePoolListAdapter adapter = new BikePoolListAdapter(getActivity(), R.layout.frag_bike_pool_list, values);
         setListAdapter(adapter);

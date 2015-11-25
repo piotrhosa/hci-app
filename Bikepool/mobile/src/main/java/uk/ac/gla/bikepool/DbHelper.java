@@ -18,7 +18,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USERS_TABLE = "users";
 
     private static final String[] POOLS_COLS = {"id", "name", "startLocationLon", "startLocationLat",
-        "finishLocationLon", "finishLocationLat", "membersNo", "weekDays", "startTime", "duration"};
+            "finishLocationLon", "finishLocationLat", "membersNo", "weekDays", "startTime", "duration",
+            "startString", "finishString"};
 
     private static final String[] USERS_COLS = {"id", "name", "thumbnailUrl", "rank"};
 
@@ -38,7 +39,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 "membersNo INTEGER, " +
                 "weekDays TEXT, " +
                 "startTime TEXT, " +
-                "duration TEXT )";
+                "duration TEXT, " +
+                "startString TEXT, " +
+                "finishString TEXT )";
 
         String CREATE_USER_TABLE = "CREATE TABLE " + USERS_TABLE + " ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -71,6 +74,8 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put("weekDays", pool.getWeekDaysString());
         values.put("startTime", pool.getStartTime());
         values.put("duration", pool.getDuration());
+        values.put("startString", pool.getStartString());
+        values.put("finishString", pool.getFinishString());
 
         db.insert(POOLS_TABLE, null, values);
         db.close();
@@ -192,6 +197,8 @@ public class DbHelper extends SQLiteOpenHelper {
         pool.setWeekDays(intArray);
         pool.setStartTime(cursor.getString(8));
         pool.setDuration(cursor.getString(9));
+        pool.setStartString(cursor.getString(10));
+        pool.setFinishString(cursor.getString(11));
 
         return pool;
     }

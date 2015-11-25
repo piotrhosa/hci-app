@@ -27,14 +27,12 @@ public class BikePoolListAdapter extends ArrayAdapter<BikePool> {
 
         BikePool pool = mPools.get(position);
         if (pool != null) {
-            TextView nameTV = (TextView) v.findViewById(R.id.text_pool_name);
             TextView startTV = (TextView) v.findViewById(R.id.text_pool_start);
             TextView finishTV = (TextView) v.findViewById(R.id.text_pool_finish);
             TextView membersNoTV = (TextView) v.findViewById(R.id.text_pool_membersNo);
 
-            if(nameTV != null) nameTV.setText(pool.getName());
-            if(startTV != null) startTV.setText(Double.toString(pool.getStartLocation().getLatitude()));
-            if(finishTV != null) finishTV.setText(Double.toString(pool.getFinishLocation().getLatitude()));
+            if(startTV != null) startTV.setText(pool.getStartString());
+            if(finishTV != null) finishTV.setText(pool.getFinishString());
             if(membersNoTV != null) membersNoTV.setText(Integer.toString(pool.getMembersNo()));
         }
 
