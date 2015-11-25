@@ -10,26 +10,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView" />
 
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="See map"
         android:id="@+id/map_btn"
-        android:layout_marginTop="121dp"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="See list"
         android:id="@+id/list_btn"
-        android:layout_marginTop="121dp"
         android:layout_below="@+id/map_btn"
         android:layout_centerHorizontal="true" />
 
@@ -38,7 +32,6 @@
         android:layout_height="wrap_content"
         android:text="See user"
         android:id="@+id/user_btn"
-        android:layout_marginTop="121dp"
         android:layout_below="@+id/list_btn"
         android:layout_centerHorizontal="true" />
 
@@ -47,8 +40,7 @@
         android:layout_height="wrap_content"
         android:text="See pool"
         android:id="@+id/pool_btn"
-        android:layout_marginTop="121dp"
-        android:layout_below="@+id/list_btn"
+        android:layout_below="@+id/user_btn"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
