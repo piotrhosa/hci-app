@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dip"
-        android:text="@string/text_pool_membersNo"
+        android:text="name"
         android:textSize="20sp" >
     </TextView>
 

@@ -11,6 +11,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     Button mapButton;
     Button listButton;
+    Button userButton;
+    Button poolButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,22 @@ public class MainActivity extends AppCompatActivity {
                 startListActivity();
             }
         });
+
+        userButton = (Button) findViewById(R.id.user_btn);
+        userButton .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startUserActivity();
+            }
+        });
+
+        poolButton = (Button) findViewById(R.id.pool_btn);
+        poolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPoolActivity();
+            }
+        });
     }
 
     public void startMapActivity(){
@@ -45,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void startListActivity() {
         Intent myIntent = new Intent(MainActivity.this, BikePoolList.class);
+        startActivity(myIntent);
+    }
+
+    public void startUserActivity() {
+        Intent myIntent = new Intent(MainActivity.this, UserActivity.class);
+        startActivity(myIntent);
+    }
+
+    public void startPoolActivity() {
+        Intent myIntent = new Intent(MainActivity.this, BikePoolActivity.class);
         startActivity(myIntent);
     }
 
