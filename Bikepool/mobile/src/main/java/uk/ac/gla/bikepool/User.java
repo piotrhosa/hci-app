@@ -1,5 +1,12 @@
 package uk.ac.gla.bikepool;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+
+import java.util.Calendar;
+
 public class User {
 
     private int mId;
@@ -7,6 +14,9 @@ public class User {
     private String mThumbnailUrl;
     private Double mRank;
     private int[] mPools;
+
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     public User() {}
 
@@ -37,4 +47,20 @@ public class User {
     public int[] getPools() {return mPools;}
 
     public void setPools(int[] pools) {mPools = pools;}
+
+    public void setNotification(int hour, int minute, BikePool bikePool, Context context) {
+        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReciever.class);
+        intent.putExtra("startLocation",bikePool.getStartString());
+        intent.putExtra("bikerName", this.getName());
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.add(Calendar.MINUTE,-20);
+
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+    }
 }

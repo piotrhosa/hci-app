@@ -115,7 +115,7 @@ public class BikePoolMap extends FragmentActivity {
                 }
 
                 Polyline line = mMap.addPolyline(new PolylineOptions()
-                        .width(3)
+                        .width(5)
                         .color(color));
                 line.setPoints(bikepool.getRoutePoints());
                 bikepool.setRoute(line);
@@ -294,15 +294,19 @@ public class BikePoolMap extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
+//        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        Criteria criteria = new Criteria();
+//
+//        Location location = null;
+//        try {
+//            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+//        } catch (SecurityException e) {
+//            Log.e("PERMISSION_EXCEPTION", "PERMISSION_NOT_GRANTED");
+//        }
 
-        Location location = null;
-        try {
-            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        } catch (SecurityException e) {
-            Log.e("PERMISSION_EXCEPTION", "PERMISSION_NOT_GRANTED");
-        }
+        Location location = new Location("");
+        location.setLatitude(55.872314);
+        location.setLongitude(-4.288154);
 
 
         if (location != null){
@@ -312,9 +316,9 @@ public class BikePoolMap extends FragmentActivity {
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
+                    .zoom(12)                   // Sets the zoom
                     .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .tilt(90)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 

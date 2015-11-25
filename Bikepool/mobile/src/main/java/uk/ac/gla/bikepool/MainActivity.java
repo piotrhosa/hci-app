@@ -11,6 +11,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     Button mapButton;
     Button listButton;
+    Button notifyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
                 startListActivity();
             }
         });
+
+        notifyButton = (Button) findViewById(R.id.notification_btn);
+        notifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotificationToWatch();
+            }
+        });
     }
 
     public void startMapActivity(){
@@ -46,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
     public void startListActivity() {
         Intent myIntent = new Intent(MainActivity.this, BikePoolList.class);
         startActivity(myIntent);
+    }
+
+    public void sendNotificationToWatch() {
+        BikePoolController controller = (BikePoolController) getApplicationContext();
+        controller.buildAndSendNotification("Twoja stara", "Robi Placki");
     }
 
     @Override

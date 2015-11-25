@@ -15,20 +15,28 @@
         android:layout_height="wrap_content"
         android:text="See map"
         android:id="@+id/map_btn"
-        android:layout_marginTop="121dp"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/list_btn"
         android:layout_centerHorizontal="true" />
 
     <Space
         android:layout_width="1dp"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp"
+        android:id="@+id/space" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="See list"
         android:id="@+id/list_btn"
-        android:layout_marginTop="121dp"
+        android:layout_below="@+id/space"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Notification"
+        android:id="@+id/notification_btn"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
