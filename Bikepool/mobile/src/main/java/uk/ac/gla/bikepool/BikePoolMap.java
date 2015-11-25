@@ -1,14 +1,23 @@
 package uk.ac.gla.bikepool;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +27,9 @@ public class BikePoolMap extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private HashMap<Marker, BikePool> mMarkersHashMap;
     private ArrayList<BikePool> bikePoolsArray = new ArrayList<>();
+    //store the Polylines(animal traces) HashMap has relation marker id(key) polyline(value)
+    private HashMap<String, Polyline> animalTraceHash;
+    HashMap<String, ArrayList<LatLng>> allTracks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +68,7 @@ public class BikePoolMap extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
-                plotMarkers(createMarkers());
+                plotMarkers(createBikePools());
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(com.google.android.gms.maps.model.Marker marker) {
@@ -68,6 +80,9 @@ public class BikePoolMap extends FragmentActivity {
         }
     }
 
+
+
+
     private void plotMarkers(ArrayList<BikePool> pools) {
         mMarkersHashMap = new HashMap<>();
         if(pools.size() > 0) {
@@ -76,20 +91,200 @@ public class BikePoolMap extends FragmentActivity {
                 MarkerOptions markerOption = new MarkerOptions().position(new LatLng(bikepool.getStartLocation().getLatitude(), bikepool.getStartLocation().getLongitude()));
                 //markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.currentlocation_icon));
 
-                Marker currentMarker = mMap.addMarker(markerOption);
-                mMarkersHashMap.put(currentMarker, bikepool);
+                Marker currentStartMarker = mMap.addMarker(markerOption);
+                mMarkersHashMap.put(currentStartMarker, bikepool);
+                mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, mMarkersHashMap));
 
-                mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this,mMarkersHashMap));
+                MarkerOptions markerOption2 = new MarkerOptions().position(new LatLng(bikepool.getFinishLocation().getLatitude(), bikepool.getFinishLocation().getLongitude()));
+                Marker currentEndMarker = mMap.addMarker(markerOption2);
+                currentEndMarker.setTitle("YO MAMA");
+                mMarkersHashMap.put(currentStartMarker, bikepool);
+                mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, mMarkersHashMap));
+
+                int color = 0;
+                switch (bikepool.getId()){
+                    case 1:
+                        color = Color.BLUE;
+                        break;
+                    case 2:
+                        color = Color.RED;
+                        break;
+                    case 3:
+                        color = Color.GREEN;
+                        break;
+                }
+
+                Polyline line = mMap.addPolyline(new PolylineOptions()
+                        .width(3)
+                        .color(color));
+                line.setPoints(bikepool.getRoutePoints());
+                bikepool.setRoute(line);
+
             }
         }
     }
 
-    public ArrayList<BikePool> createMarkers(){
+    public ArrayList<BikePool> createBikePools() {
         Location location = new Location(Constants.locationProvider);
-        location.setLatitude(55.872094);
-        location.setLongitude(-4.285022);
-        bikePoolsArray.add(new BikePool("", location));
+        location.setLatitude(55.853081);
+        location.setLongitude(-4.245957);
+        Location location2 = new Location(Constants.locationProvider);
+        location2.setLatitude(55.878444);
+        location2.setLongitude(-4.334868);
+        BikePool pool1 = new BikePool(1,"", location, location2, getRoute(1));
+
+        Location location3 = new Location(Constants.locationProvider);
+        location3.setLatitude(55.873544);
+        location3.setLongitude(-4.291769);
+        Location location4 = new Location(Constants.locationProvider);
+        location4.setLatitude(55.852054);
+        location4.setLongitude(-4.258801);
+        BikePool pool2 = new BikePool(2,"", location3, location4, getRoute(2));
+
+        Location location5 = new Location(Constants.locationProvider);
+        location5.setLatitude(55.873544);
+        location5.setLongitude(-4.291769);
+        Location location6 = new Location(Constants.locationProvider);
+        location6.setLatitude(55.852054);
+        location6.setLongitude(-4.258801);
+        BikePool pool3 = new BikePool(3,"", location3, location4, getRoute(3));
+
+        bikePoolsArray.add(pool1);
+        bikePoolsArray.add(pool2);
+        bikePoolsArray.add(pool3);
         return bikePoolsArray;
+    }
+
+    public ArrayList<LatLng> getRoute(int routeId){
+        switch (routeId){
+            case 1:
+                ArrayList<LatLng> routeA = new ArrayList<>();
+                routeA.add(new LatLng(55.853081, -4.245957));
+                routeA.add(new LatLng(55.854556, -4.250856));
+                routeA.add(new LatLng(55.854506, -4.251590));
+                routeA.add(new LatLng(55.856053, -4.257209));
+                routeA.add(new LatLng(55.856664, -4.264569));
+                routeA.add(new LatLng(55.856418, -4.269584));
+                routeA.add(new LatLng(55.856592, -4.274310));
+                routeA.add(new LatLng(55.857228, -4.279024));
+                routeA.add(new LatLng(55.857451, -4.279269));
+                routeA.add(new LatLng(55.857805, -4.281650));
+                routeA.add(new LatLng(55.858574, -4.283871));
+                routeA.add(new LatLng(55.858738, -4.285344));
+                routeA.add(new LatLng(55.858566, -4.286136));
+                routeA.add(new LatLng(55.858566, -4.286136));
+                routeA.add(new LatLng(55.858566, -4.286136));
+                routeA.add(new LatLng(55.860892, -4.295201));
+                routeA.add(new LatLng(55.860892, -4.295201));
+                routeA.add(new LatLng(55.862135, -4.295522));
+                routeA.add(new LatLng(55.862939, -4.297461));
+                routeA.add(new LatLng(55.862939, -4.297461));
+                routeA.add(new LatLng(55.864669, -4.301608));
+                routeA.add(new LatLng(55.865439, -4.302495));
+                routeA.add(new LatLng(55.865439, -4.302495));
+                routeA.add(new LatLng(55.865827, -4.305180));
+                routeA.add(new LatLng(55.866451, -4.305186));
+                routeA.add(new LatLng(55.867093, -4.304780));
+                routeA.add(new LatLng(55.867884, -4.306189));
+                routeA.add(new LatLng(55.868193, -4.307546));
+                routeA.add(new LatLng(55.868143, -4.308865));
+                routeA.add(new LatLng(55.867844, -4.311204));
+                routeA.add(new LatLng(55.870066, -4.322557));
+                routeA.add(new LatLng(55.870527, -4.322486));
+                routeA.add(new LatLng(55.870614, -4.323483));
+                routeA.add(new LatLng(55.871731, -4.325757));
+                routeA.add(new LatLng(55.872181, -4.327710));
+                routeA.add(new LatLng(55.873197, -4.327395));
+                routeA.add(new LatLng(55.873600, -4.327588));
+                routeA.add(new LatLng(55.875656, -4.327136));
+                routeA.add(new LatLng(55.875671, -4.327308));
+                routeA.add(new LatLng(55.876022, -4.327111));
+                routeA.add(new LatLng(55.876079, -4.327481));
+                routeA.add(new LatLng(55.875721, -4.327769));
+                routeA.add(new LatLng(55.876491, -4.327743));
+                routeA.add(new LatLng(55.877323, -4.330524));
+                routeA.add(new LatLng(55.878444, -4.334868));
+                return routeA;
+            case 2:
+                ArrayList<LatLng> routeB = new ArrayList<>();
+                routeB.add(new LatLng(55.873544, -4.291769));
+                routeB.add(new LatLng(55.872657, -4.290640));
+                routeB.add(new LatLng(55.872079, -4.285788));
+                routeB.add(new LatLng(55.871994, -4.284969));
+                routeB.add(new LatLng(55.867953, -4.287703));
+                routeB.add(new LatLng(55.866339, -4.289312));
+                routeB.add(new LatLng(55.864880, -4.284745));
+                routeB.add(new LatLng(55.864090, -4.285447));
+                routeB.add(new LatLng(55.863130, -4.283306));
+                routeB.add(new LatLng(55.863137, -4.282862));
+                routeB.add(new LatLng(55.861465, -4.283241));
+                routeB.add(new LatLng(55.861179, -4.283425));
+                routeB.add(new LatLng(55.861717, -4.285840));
+                routeB.add(new LatLng(55.859984, -4.287038));
+                routeB.add(new LatLng(55.860050, -4.288469));
+                routeB.add(new LatLng(55.859313, -4.289113));
+                routeB.add(new LatLng(55.859893, -4.291882));
+                routeB.add(new LatLng(55.858804, -4.292665));
+                routeB.add(new LatLng(55.858110, -4.289636));
+                routeB.add(new LatLng(55.856744, -4.290612));
+                routeB.add(new LatLng(55.856620, -4.288304));
+                routeB.add(new LatLng(55.855577, -4.283366));
+                routeB.add(new LatLng(55.854361, -4.280676));
+                routeB.add(new LatLng(55.853715, -4.278644));
+                routeB.add(new LatLng(55.853664, -4.274590));
+                routeB.add(new LatLng(55.854110, -4.269703));
+                routeB.add(new LatLng(55.854352, -4.264925));
+                routeB.add(new LatLng(55.853688, -4.258548));
+                routeB.add(new LatLng(55.852092, -4.259120));
+                routeB.add(new LatLng(55.852054, -4.258801));
+
+                return routeB;
+            case 3:
+                ArrayList<LatLng> routeC = new ArrayList<>();
+                routeC.add(new LatLng(55.872696, -4.292622));
+                routeC.add(new LatLng(55.872924, -4.292487));
+                routeC.add(new LatLng(55.874068, -4.294977));
+                routeC.add(new LatLng(55.876740, -4.292063));
+                routeC.add(new LatLng(55.877874, -4.290312));
+                routeC.add(new LatLng(55.878086, -4.290493));
+                routeC.add(new LatLng(55.878770, -4.292442));
+                routeC.add(new LatLng(55.878987, -4.292243));
+                routeC.add(new LatLng(55.879286, -4.292369));
+                routeC.add(new LatLng(55.879534, -4.291846));
+                routeC.add(new LatLng(55.879468, -4.291539));
+                routeC.add(new LatLng(55.880004, -4.291655));
+                routeC.add(new LatLng(55.880541, -4.292918));
+                routeC.add(new LatLng(55.881537, -4.293513));
+                routeC.add(new LatLng(55.881790, -4.293847));
+                routeC.add(new LatLng(55.881755, -4.292322));
+                routeC.add(new LatLng(55.881968, -4.292160));
+                routeC.add(new LatLng(55.882762, -4.289976));
+                routeC.add(new LatLng(55.882964, -4.289805));
+                routeC.add(new LatLng(55.883076, -4.289354));
+                routeC.add(new LatLng(55.883749, -4.288975));
+                routeC.add(new LatLng(55.884093, -4.289724));
+                routeC.add(new LatLng(55.884366, -4.289778));
+                routeC.add(new LatLng(55.885226, -4.291158));
+                routeC.add(new LatLng(55.885393, -4.292042));
+                routeC.add(new LatLng(55.886178, -4.295498));
+                routeC.add(new LatLng(55.887437, -4.297600));
+                routeC.add(new LatLng(55.888095, -4.297302));
+                routeC.add(new LatLng(55.889648, -4.298069));
+                routeC.add(new LatLng(55.891525, -4.300334));
+                routeC.add(new LatLng(55.892729, -4.301416));
+                routeC.add(new LatLng(55.893382, -4.301281));
+                routeC.add(new LatLng(55.894136, -4.300812));
+                routeC.add(new LatLng(55.895461, -4.301552));
+                routeC.add(new LatLng(55.897485, -4.305287));
+                routeC.add(new LatLng(55.898274, -4.306622));
+                routeC.add(new LatLng(55.899503, -4.305810));
+                routeC.add(new LatLng(55.899144, -4.303040));
+                routeC.add(new LatLng(55.899260, -4.302688));
+                routeC.add(new LatLng(55.897859, -4.300694));
+                routeC.add(new LatLng(55.898506, -4.298219));
+                return routeC;
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -99,6 +294,30 @@ public class BikePoolMap extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        Location location = null;
+        try {
+            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        } catch (SecurityException e) {
+            Log.e("PERMISSION_EXCEPTION", "PERMISSION_NOT_GRANTED");
+        }
+
+
+        if (location != null){
+            Log.e("LOCATION NOT NULL", "NOT NULL");
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
     }
 }

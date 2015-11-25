@@ -2,16 +2,26 @@ package uk.ac.gla.bikepool;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+
+import java.util.ArrayList;
+
 public class BikePool {
 
     private int mId;
     private String mName;
     private Location mStartLocation;
     private Location mFinishLocation;
+    private String startLocName;
+    private String endLocationName;
     private int mMembersNo;
     private int[] mWeekDays;
     private String mStartTime;
     private String mDuration;
+    private ArrayList<LatLng> routePoints;
+    private Polyline route;
+
 
     public BikePool() {}
 
@@ -24,9 +34,11 @@ public class BikePool {
         mWeekDays = new int[7];
         mStartTime = "0:00";
         mDuration = "0:00";
+        routePoints = null;
+        route = null;
     }
 
-    public BikePool(String name, Location startLocation) {
+    public BikePool(String name, Location startLocation, ArrayList<LatLng> routePoints) {
         mId = 0;
         mName = name;
         mStartLocation = startLocation;
@@ -35,9 +47,11 @@ public class BikePool {
         mWeekDays = new int[7];
         mStartTime = "0:00";
         mDuration = "0:00";
+        this.routePoints = routePoints;
+        route = null;
     }
 
-    public BikePool(String name, Location startLocation, Location endLocation) {
+    public BikePool(int id, String name, Location startLocation, Location endLocation, ArrayList<LatLng> routePoints) {
         mId = 0;
         mName = name;
         mStartLocation = startLocation;
@@ -46,6 +60,8 @@ public class BikePool {
         mWeekDays = new int[7];
         mStartTime = "0:00";
         mDuration = "0:00";
+        this.routePoints = routePoints;
+        route = null;
     }
 
     public int getId() {return mId;}
@@ -87,4 +103,20 @@ public class BikePool {
     public void setStartTime(String startTime) {mStartTime = startTime;}
 
     public void setDuration(String duration) {mDuration = duration;}
+
+    public ArrayList<LatLng> getRoutePoints() {
+        return routePoints;
+    }
+
+    public void setRoutePoints(ArrayList<LatLng> routePoints) {
+        this.routePoints = routePoints;
+    }
+
+    public Polyline getRoute() {
+        return route;
+    }
+
+    public void setRoute(Polyline route) {
+        this.route = route;
+    }
 }
