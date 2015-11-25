@@ -1,7 +1,13 @@
 package uk.ac.gla.bikepool;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,6 +18,7 @@ import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -89,16 +96,18 @@ public class BikePoolMap extends FragmentActivity {
             for (BikePool bikepool : pools) {
                 // Create user marker with custom icon and other options
                 MarkerOptions markerOption = new MarkerOptions().position(new LatLng(bikepool.getStartLocation().getLatitude(), bikepool.getStartLocation().getLongitude()));
-                //markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.currentlocation_icon));
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.marker,
+                        bikepool.getStartTime(), Integer.toString(bikepool.getMembersNo()))));
 
                 Marker currentStartMarker = mMap.addMarker(markerOption);
                 mMarkersHashMap.put(currentStartMarker, bikepool);
                 mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, mMarkersHashMap));
 
                 MarkerOptions markerOption2 = new MarkerOptions().position(new LatLng(bikepool.getFinishLocation().getLatitude(), bikepool.getFinishLocation().getLongitude()));
+                markerOption2.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.finish, "","")));
                 Marker currentEndMarker = mMap.addMarker(markerOption2);
                 currentEndMarker.setTitle("YO MAMA");
-                mMarkersHashMap.put(currentStartMarker, bikepool);
+                mMarkersHashMap.put(currentEndMarker, bikepool);
                 mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, mMarkersHashMap));
 
                 int color = 0;
@@ -122,6 +131,51 @@ public class BikePoolMap extends FragmentActivity {
 
             }
         }
+    }
+
+    private Bitmap writeTextOnDrawable(int drawableId, String startTime, String numberOfPeople) {
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
+                .copy(Bitmap.Config.ARGB_8888, true);
+
+        Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTypeface(tf);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(convertToPixels(this, 10));
+
+        Rect textRect = new Rect();
+        paint.getTextBounds(startTime, 0, startTime.length(), textRect);
+
+        Canvas canvas = new Canvas(bm);
+
+        //If the text is bigger than the canvas , reduce the font size
+        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+            paint.setTextSize(convertToPixels(this, 7));        //Scaling needs to be used for different dpi's
+
+        //Calculate the positions
+        int xPos = (canvas.getWidth() / 2)+5;     //-2 is for regulating the x position offset
+
+        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) -30 ;
+
+        canvas.drawText(startTime, xPos, yPos, paint);
+        canvas.drawText(numberOfPeople+" people", xPos, yPos+20, paint);
+
+        return  bm;
+    }
+
+
+
+    public static int convertToPixels(Context context, int nDP)
+    {
+        final float conversionScale = context.getResources().getDisplayMetrics().density;
+
+        return (int) ((nDP * conversionScale) + 0.5f) ;
+
     }
 
     public ArrayList<BikePool> createBikePools() {
@@ -316,7 +370,7 @@ public class BikePoolMap extends FragmentActivity {
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(12)                   // Sets the zoom
+                    .zoom(8)                   // Sets the zoom
                     .bearing(90)                // Sets the orientation of the camera to east
                     .tilt(90)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
