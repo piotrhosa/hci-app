@@ -10,6 +10,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     Button mapButton;
+    Button listButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +27,24 @@ public class MainActivity extends AppCompatActivity {
                 startMapActivity();
             }
         });
+
+        listButton = (Button) findViewById(R.id.list_btn);
+        listButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startListActivity();
+            }
+        });
     }
 
     public void startMapActivity(){
         Intent myIntent = new Intent(MainActivity.this, BikePoolMap.class);
         //myIntent.putExtra("key", value); //Optional parameters
+        startActivity(myIntent);
+    }
+
+    public void startListActivity() {
+        Intent myIntent = new Intent(MainActivity.this, BikePoolList.class);
         startActivity(myIntent);
     }
 
