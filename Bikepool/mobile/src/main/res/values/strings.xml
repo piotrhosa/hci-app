@@ -2,6 +2,8 @@
     <string name="app_name">Bikepool</string>
     <string name="title_activity_bike_pool_map">Map</string>
     <string name="title_activity_main">BikePool</string>
+    <string name="title_activity_user">User profile</string>
+    <string name="title_activity_pool">BikePool</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

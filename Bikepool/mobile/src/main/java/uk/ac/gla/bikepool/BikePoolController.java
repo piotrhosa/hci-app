@@ -21,7 +21,7 @@ public class BikePoolController extends Application{
     }
 
 
-    public void buildAndSendNotification(String messageBody,String messageTitle){
+    public void buildAndSendNotification(String messageTitle, String messageBody){
         int notificationId = 001;
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this)

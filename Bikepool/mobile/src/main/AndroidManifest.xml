@@ -44,7 +44,20 @@
             android:parentActivityName="uk.ac.gla.bikepool.MainActivity" >
         </activity>
 
+        <activity
+            android:name=".UserActivity"
+            android:label="@string/title_activity_user"
+            android:parentActivityName="uk.ac.gla.bikepool.MainActivity" >
+        </activity>
+        <activity
+            android:name=".BikePoolActivity"
+            android:label="@string/title_activity_pool"
+            android:parentActivityName="uk.ac.gla.bikepool.MainActivity" >
+        </activity>
+
         <receiver android:name=".AlarmReciever" />
+
     </application>
+
 
 </manifest>

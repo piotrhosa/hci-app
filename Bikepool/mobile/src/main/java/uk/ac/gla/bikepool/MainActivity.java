@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
     Button mapButton;
     Button listButton;
     Button notifyButton;
+    Button userButton;
+    Button poolButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,22 @@ public class MainActivity extends AppCompatActivity {
                 sendNotificationToWatch();
             }
         });
+
+        userButton = (Button) findViewById(R.id.user_btn);
+        userButton .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startUserActivity();
+            }
+        });
+
+        poolButton = (Button) findViewById(R.id.pool_btn);
+        poolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPoolActivity();
+            }
+        });
     }
 
     public void startMapActivity(){
@@ -57,9 +75,20 @@ public class MainActivity extends AppCompatActivity {
         startActivity(myIntent);
     }
 
+
     public void sendNotificationToWatch() {
         BikePoolController controller = (BikePoolController) getApplicationContext();
         controller.buildAndSendNotification("Twoja stara", "Robi Placki");
+    }
+
+    public void startUserActivity() {
+        Intent myIntent = new Intent(MainActivity.this, UserActivity.class);
+        startActivity(myIntent);
+    }
+
+    public void startPoolActivity() {
+        Intent myIntent = new Intent(MainActivity.this, BikePoolActivity.class);
+        startActivity(myIntent);
     }
 
     @Override
@@ -80,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
