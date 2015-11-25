@@ -6,6 +6,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.location.Location;
+import android.app.Activity;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -13,12 +14,13 @@ import java.util.ArrayList;
 
 public class BikePoolListFragment extends ListFragment {
 
+    OnPoolPass poolPasser;
+    ArrayList<BikePool> values;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        super.onCreate(savedInstanceState);
-
-        ArrayList<BikePool> values = new ArrayList<BikePool>();
+        values = new ArrayList<BikePool>();
         DbHelper db = new DbHelper(getActivity());
         Location start = new Location("noProvider");
         Location finish = new Location("noProvider");
@@ -29,7 +31,21 @@ public class BikePoolListFragment extends ListFragment {
     }
 
     @Override
+    public void onAttach(Activity a) {
+        super.onAttach(a);
+        poolPasser = (OnPoolPass) a;
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Toast.makeText(getActivity(), Integer.toString(position), Toast.LENGTH_SHORT).show();
+        passPool(values.get(position));
+    }
+
+    public void passPool(BikePool pool) {
+        poolPasser.onPoolPass(pool);
+    }
+
+    public interface OnPoolPass {
+        public void onPoolPass(BikePool pool);
     }
 }

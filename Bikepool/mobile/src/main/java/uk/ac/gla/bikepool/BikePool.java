@@ -5,9 +5,10 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BikePool {
+public class BikePool implements Serializable {
 
     private int mId;
     private String mName;
@@ -135,4 +136,5 @@ public class BikePool {
     public void setRoute(Polyline route) {
         this.route = route;
     }
+    
 }

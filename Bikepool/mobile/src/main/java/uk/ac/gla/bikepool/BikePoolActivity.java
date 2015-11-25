@@ -3,6 +3,7 @@ package uk.ac.gla.bikepool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BikePoolActivity extends AppCompatActivity {
     TextView nameTV;
@@ -15,6 +16,9 @@ public class BikePoolActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pool);
+
+        BikePool pool = (BikePool)getIntent().getSerializableExtra("pool");
+        Toast.makeText(this, pool.getName(), Toast.LENGTH_SHORT);
 
         hookText();
     }

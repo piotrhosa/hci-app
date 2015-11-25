@@ -1,18 +1,16 @@
 package uk.ac.gla.bikepool;
 
-import java.util.ArrayList;
-
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import android.support.v4.app.NavUtils;
+import android.widget.Toast;
 
-public class BikePoolList extends AppCompatActivity {
+import uk.ac.gla.bikepool.BikePoolListFragment.OnPoolPass;
+
+public class BikePoolList extends AppCompatActivity implements OnPoolPass {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,5 +52,12 @@ public class BikePoolList extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPoolPass(BikePool pool) {
+        Intent myIntent = new Intent(BikePoolList.this, BikePoolActivity.class);
+        myIntent.putExtra("pool", pool);
+        startActivity(myIntent);
     }
 }
