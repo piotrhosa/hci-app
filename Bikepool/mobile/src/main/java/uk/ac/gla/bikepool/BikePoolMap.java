@@ -131,7 +131,7 @@ public class BikePoolMap extends FragmentActivity {
         Location location2 = new Location(Constants.locationProvider);
         location2.setLatitude(55.878444);
         location2.setLongitude(-4.334868);
-        BikePool pool1 = new BikePool(1,"", location, location2, getRoute(1));
+        BikePool pool1 = new BikePool(1,"", location, location2,"1" ,"2" , getRoute(1));
 
         Location location3 = new Location(Constants.locationProvider);
         location3.setLatitude(55.873544);
@@ -139,7 +139,7 @@ public class BikePoolMap extends FragmentActivity {
         Location location4 = new Location(Constants.locationProvider);
         location4.setLatitude(55.852054);
         location4.setLongitude(-4.258801);
-        BikePool pool2 = new BikePool(2,"", location3, location4, getRoute(2));
+        BikePool pool2 = new BikePool(2,"", location3, location4,"3","4", getRoute(2));
 
         Location location5 = new Location(Constants.locationProvider);
         location5.setLatitude(55.873544);
@@ -147,7 +147,7 @@ public class BikePoolMap extends FragmentActivity {
         Location location6 = new Location(Constants.locationProvider);
         location6.setLatitude(55.852054);
         location6.setLongitude(-4.258801);
-        BikePool pool3 = new BikePool(3,"", location3, location4, getRoute(3));
+        BikePool pool3 = new BikePool(3,"", location3, location4,"4","5", getRoute(3));
 
         bikePoolsArray.add(pool1);
         bikePoolsArray.add(pool2);

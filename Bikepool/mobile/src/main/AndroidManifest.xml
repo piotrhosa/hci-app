@@ -37,6 +37,11 @@
             android:name=".BikePoolMap"
             android:label="@string/title_activity_bike_pool_map" >
         </activity>
+        <activity
+            android:name=".BikePoolList"
+            android:label="@string/title_fragment_bike_pool_list"
+            android:parentActivityName="uk.ac.gla.bikepool.MainActivity" >
+        </activity>
     </application>
 
 </manifest>

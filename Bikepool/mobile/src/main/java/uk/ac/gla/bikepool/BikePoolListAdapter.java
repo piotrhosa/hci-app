@@ -22,19 +22,17 @@ public class BikePoolListAdapter extends ArrayAdapter<BikePool> {
 
         if (v == null) {
             LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.frag_bike_pool_list, null);
+            v = vi.inflate(R.layout.list_bike_pool_item, null);
         }
 
         BikePool pool = mPools.get(position);
         if (pool != null) {
-            TextView nameTV = (TextView) v.findViewById(R.id.text_pool_name);
             TextView startTV = (TextView) v.findViewById(R.id.text_pool_start);
             TextView finishTV = (TextView) v.findViewById(R.id.text_pool_finish);
             TextView membersNoTV = (TextView) v.findViewById(R.id.text_pool_membersNo);
 
-            if(nameTV != null) nameTV.setText(pool.getName());
-            if(startTV != null) startTV.setText(pool.getStartLocation().toString());
-            if(finishTV != null) startTV.setText(pool.getFinishLocation().toString());
+            if(startTV != null) startTV.setText(pool.getStartString());
+            if(finishTV != null) finishTV.setText(pool.getFinishString());
             if(membersNoTV != null) membersNoTV.setText(Integer.toString(pool.getMembersNo()));
         }
 

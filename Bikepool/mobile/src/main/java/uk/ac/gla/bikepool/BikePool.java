@@ -13,8 +13,8 @@ public class BikePool {
     private String mName;
     private Location mStartLocation;
     private Location mFinishLocation;
-    private String startLocName;
-    private String endLocationName;
+    private String mStartString;
+    private String mFinishString;
     private int mMembersNo;
     private int[] mWeekDays;
     private String mStartTime;
@@ -34,8 +34,9 @@ public class BikePool {
         mWeekDays = new int[7];
         mStartTime = "0:00";
         mDuration = "0:00";
-        routePoints = null;
-        route = null;
+        mStartString = "";
+        mFinishString = "";
+
     }
 
     public BikePool(String name, Location startLocation, ArrayList<LatLng> routePoints) {
@@ -52,7 +53,12 @@ public class BikePool {
     }
 
     public BikePool(int id, String name, Location startLocation, Location endLocation, ArrayList<LatLng> routePoints) {
-        mId = 0;
+        mStartString = "";
+        mFinishString = "";
+    }
+
+    public BikePool(int id, String name, Location startLocation, Location endLocation, String startString, String finishString,ArrayList<LatLng> routePoints) {
+        mId = id;
         mName = name;
         mStartLocation = startLocation;
         mFinishLocation = endLocation;
@@ -62,6 +68,8 @@ public class BikePool {
         mDuration = "0:00";
         this.routePoints = routePoints;
         route = null;
+        mStartString = startString;
+        mFinishString = finishString;
     }
 
     public int getId() {return mId;}
@@ -93,6 +101,14 @@ public class BikePool {
 
         return strBuilder.toString();
     }
+
+    public String getStartString() {return mStartString;}
+
+    public String getFinishString() {return mFinishString;}
+
+    public void setStartString(String startString) {mStartString = startString;}
+
+    public void setFinishString(String finishString) {mFinishString = finishString;}
 
     public String getStartTime() {return mStartTime;}
 

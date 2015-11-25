@@ -8,7 +8,6 @@ import android.location.Location;
 import android.content.ContentValues;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -19,7 +18,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USERS_TABLE = "users";
 
     private static final String[] POOLS_COLS = {"id", "name", "startLocationLon", "startLocationLat",
-        "finishLocationLon", "finishLocationLat", "membersNo", "weekDays", "startTime", "duration"};
+            "finishLocationLon", "finishLocationLat", "membersNo", "weekDays", "startTime", "duration",
+            "startString", "finishString"};
 
     private static final String[] USERS_COLS = {"id", "name", "thumbnailUrl", "rank"};
 
@@ -39,7 +39,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 "membersNo INTEGER, " +
                 "weekDays TEXT, " +
                 "startTime TEXT, " +
-                "duration INTEGER )";
+                "duration TEXT, " +
+                "startString TEXT, " +
+                "finishString TEXT )";
 
         String CREATE_USER_TABLE = "CREATE TABLE " + USERS_TABLE + " ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -59,13 +61,12 @@ public class DbHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
     public void addPool(BikePool pool) {
-
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
         values.put("name", pool.getName());
-        values.put("starLocationLon", pool.getStartLocation().getLongitude());
+        values.put("startLocationLon", pool.getStartLocation().getLongitude());
         values.put("startLocationLat", pool.getStartLocation().getLatitude());
         values.put("finishLocationLon", pool.getFinishLocation().getLongitude());
         values.put("finishLocationLat", pool.getFinishLocation().getLatitude());
@@ -73,6 +74,8 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put("weekDays", pool.getWeekDaysString());
         values.put("startTime", pool.getStartTime());
         values.put("duration", pool.getDuration());
+        values.put("startString", pool.getStartString());
+        values.put("finishString", pool.getFinishString());
 
         db.insert(POOLS_TABLE, null, values);
         db.close();
@@ -97,8 +100,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return makeBikePool(cursor);
     }
 
-    public List<BikePool> getAllPools() {
-        List<BikePool> pools = new ArrayList<BikePool>();
+    public ArrayList<BikePool> getAllPools() {
+        ArrayList<BikePool> pools = new ArrayList<BikePool>();
 
         String query = "SELECT  * FROM " + POOLS_TABLE;
 
@@ -147,8 +150,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return makeUser(cursor);
     }
 
-    public List<User> getAllUsers() {
-        List<User> pools = new ArrayList<User>();
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> pools = new ArrayList<User>();
 
         String query = "SELECT  * FROM " + USERS_TABLE;
 
@@ -179,22 +182,23 @@ public class DbHelper extends SQLiteOpenHelper {
 
         BikePool pool = new BikePool(cursor.getString(1));
         pool.setId(Integer.parseInt(cursor.getString(0)));
-        pool.setName(cursor.getString(2));
         Location start = new Location("noProvider");
-        start.setLongitude(Double.parseDouble(cursor.getString(3)));
-        start.setLatitude(Double.parseDouble(cursor.getString(4)));
+        start.setLongitude(Double.parseDouble(cursor.getString(2)));
+        start.setLatitude(Double.parseDouble(cursor.getString(3)));
         Location finish = new Location("noProvider");
-        finish.setLongitude(Double.parseDouble(cursor.getString(5)));
-        finish.setLatitude(Double.parseDouble(cursor.getString(6)));
+        finish.setLongitude(Double.parseDouble(cursor.getString(4)));
+        finish.setLatitude(Double.parseDouble(cursor.getString(5)));
         pool.setStartLocation(start);
         pool.setFinishLocation(finish);
-        pool.setMembersNo(Integer.parseInt(cursor.getString(7)));
-        String[] daysArray = cursor.getString(8).split("(?!^)");
+        pool.setMembersNo(Integer.parseInt(cursor.getString(6)));
+        String[] daysArray = cursor.getString(7).split("(?!^)");
         int[] intArray = new int[daysArray.length];
         for(int i = 0; i < daysArray.length; ++i) intArray[i] = Integer.parseInt(daysArray[i]);
         pool.setWeekDays(intArray);
-        pool.setStartTime(cursor.getString(9));
-        pool.setDuration(cursor.getString(10));
+        pool.setStartTime(cursor.getString(8));
+        pool.setDuration(cursor.getString(9));
+        pool.setStartString(cursor.getString(10));
+        pool.setFinishString(cursor.getString(11));
 
         return pool;
     }
