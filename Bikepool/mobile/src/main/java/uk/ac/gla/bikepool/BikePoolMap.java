@@ -14,10 +14,14 @@ import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,12 +41,27 @@ public class BikePoolMap extends FragmentActivity {
     //store the Polylines(animal traces) HashMap has relation marker id(key) polyline(value)
     private HashMap<String, Polyline> animalTraceHash;
     HashMap<String, ArrayList<LatLng>> allTracks;
+    BitmapDescriptor activeMarker;
+    BitmapDescriptor inActiveMarker;
+    Button joinPoolButton;
+    int whichPoolSelected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bike_pool_map);
         setUpMapIfNeeded();
+        activeMarker = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+        inActiveMarker = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+
+        joinPoolButton = (Button) findViewById(R.id.join_pool_btn);
+        joinPoolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Joined pool " + Integer.toString(whichPoolSelected),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -79,9 +98,50 @@ public class BikePoolMap extends FragmentActivity {
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(com.google.android.gms.maps.model.Marker marker) {
-                        marker.showInfoWindow();
+                        if (marker.getTitle().equals("start") && !mMarkersHashMap.get(marker).isMarkerClicked()) {
+                            for (Marker m: mMarkersHashMap.keySet()){
+                                if(mMarkersHashMap.get(m).isMarkerClicked() && m.getTitle().equals("start") &&
+                                        mMarkersHashMap.get(m).getId() != mMarkersHashMap.get(marker).getId()){
+                                    BikePool pool = mMarkersHashMap.get(m);
+                                    pool.setMarkerClicked(false);
+                                    m.setIcon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.marker_grey,
+                                            pool.getStartTime(), Integer.toString(pool.getMembersNo()))));
+                                    m.setAlpha((float)0.5);
+                                    whichPoolSelected = 0;
+                                    joinPoolButton.setBackgroundColor(Color.GRAY);
+                                }
+                            }
+                            BikePool pool =  mMarkersHashMap.get(marker);
+
+                            whichPoolSelected =pool.getId();
+                            pool.setMarkerClicked(true);
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.marker,
+                                    pool.getStartTime(), Integer.toString(pool.getMembersNo()))));
+                            marker.setAlpha(1);
+                            joinPoolButton.setBackgroundColor(Color.GREEN);
+
+                        }
                         return true;
                     }
+                });
+
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        for (Marker m: mMarkersHashMap.keySet()){
+                            if(mMarkersHashMap.get(m).isMarkerClicked() && m.getTitle().equals("start")){
+                                BikePool pool = mMarkersHashMap.get(m);
+                                pool.setMarkerClicked(false);
+                                m.setIcon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.marker_grey,
+                                        pool.getStartTime(), Integer.toString(pool.getMembersNo()))));
+                                m.setAlpha((float)0.5);
+                                whichPoolSelected = 0;
+                                joinPoolButton.setBackgroundColor(Color.GRAY);
+                            }
+                        }
+                    }
+
                 });
             }
         }
@@ -96,19 +156,19 @@ public class BikePoolMap extends FragmentActivity {
             for (BikePool bikepool : pools) {
                 // Create user marker with custom icon and other options
                 MarkerOptions markerOption = new MarkerOptions().position(new LatLng(bikepool.getStartLocation().getLatitude(), bikepool.getStartLocation().getLongitude()));
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.marker,
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.marker_grey,
                         bikepool.getStartTime(), Integer.toString(bikepool.getMembersNo()))));
 
                 Marker currentStartMarker = mMap.addMarker(markerOption);
                 mMarkersHashMap.put(currentStartMarker, bikepool);
-                mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, mMarkersHashMap));
+                currentStartMarker.setTitle("start");
+                currentStartMarker.setAlpha((float)0.5);
 
                 MarkerOptions markerOption2 = new MarkerOptions().position(new LatLng(bikepool.getFinishLocation().getLatitude(), bikepool.getFinishLocation().getLongitude()));
                 markerOption2.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.finish, "","")));
                 Marker currentEndMarker = mMap.addMarker(markerOption2);
-                currentEndMarker.setTitle("YO MAMA");
+                currentEndMarker.setTitle("end");
                 mMarkersHashMap.put(currentEndMarker, bikepool);
-                mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, mMarkersHashMap));
 
                 int color = 0;
                 switch (bikepool.getId()){
@@ -164,6 +224,7 @@ public class BikePoolMap extends FragmentActivity {
 
         canvas.drawText(startTime, xPos, yPos, paint);
         canvas.drawText(numberOfPeople+" people", xPos, yPos+20, paint);
+        canvas.drawText("Click", xPos, yPos+40, paint);
 
         return  bm;
     }
@@ -177,6 +238,7 @@ public class BikePoolMap extends FragmentActivity {
         return (int) ((nDP * conversionScale) + 0.5f) ;
 
     }
+
 
     public ArrayList<BikePool> createBikePools() {
         Location location = new Location(Constants.locationProvider);
@@ -196,12 +258,12 @@ public class BikePoolMap extends FragmentActivity {
         BikePool pool2 = new BikePool(2,"", location3, location4,"3","4", getRoute(2));
 
         Location location5 = new Location(Constants.locationProvider);
-        location5.setLatitude(55.873544);
-        location5.setLongitude(-4.291769);
+        location5.setLatitude(55.872696);
+        location5.setLongitude(-4.292622);
         Location location6 = new Location(Constants.locationProvider);
-        location6.setLatitude(55.852054);
-        location6.setLongitude(-4.258801);
-        BikePool pool3 = new BikePool(3,"", location3, location4,"4","5", getRoute(3));
+        location6.setLatitude(55.898506);
+        location6.setLongitude(-4.298219);
+        BikePool pool3 = new BikePool(3,"", location5, location6,"4","5", getRoute(3));
 
         bikePoolsArray.add(pool1);
         bikePoolsArray.add(pool2);
@@ -370,9 +432,9 @@ public class BikePoolMap extends FragmentActivity {
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(8)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(90)                   // Sets the tilt of the camera to 30 degrees
+                    .zoom(11)                   // Sets the zoom
+                    .bearing(60)                // Sets the orientation of the camera to east
+                    .tilt(0)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 

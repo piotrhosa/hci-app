@@ -22,6 +22,7 @@ public class BikePool implements Serializable {
     private String mDuration;
     private ArrayList<LatLng> routePoints;
     private Polyline route;
+    private boolean isMarkerClicked;
 
 
     public BikePool() {}
@@ -37,6 +38,7 @@ public class BikePool implements Serializable {
         mDuration = "0:00";
         mStartString = "";
         mFinishString = "";
+        isMarkerClicked = false;
 
     }
 
@@ -51,11 +53,13 @@ public class BikePool implements Serializable {
         mDuration = "0:00";
         this.routePoints = routePoints;
         route = null;
+        isMarkerClicked = false;
     }
 
     public BikePool(int id, String name, Location startLocation, Location endLocation, ArrayList<LatLng> routePoints) {
         mStartString = "";
         mFinishString = "";
+        isMarkerClicked = false;
     }
 
     public BikePool(int id, String name, Location startLocation, Location endLocation, String startString, String finishString,ArrayList<LatLng> routePoints) {
@@ -71,6 +75,7 @@ public class BikePool implements Serializable {
         route = null;
         mStartString = startString;
         mFinishString = finishString;
+        isMarkerClicked = false;
     }
 
     public int getId() {return mId;}
@@ -136,5 +141,12 @@ public class BikePool implements Serializable {
     public void setRoute(Polyline route) {
         this.route = route;
     }
-    
+
+    public boolean isMarkerClicked() {
+        return isMarkerClicked;
+    }
+
+    public void setMarkerClicked(boolean markerClicked) {
+        isMarkerClicked = markerClicked;
+    }
 }
