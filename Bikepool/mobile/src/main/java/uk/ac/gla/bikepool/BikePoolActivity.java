@@ -18,7 +18,6 @@ public class BikePoolActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pool);
 
         BikePool pool = (BikePool)getIntent().getSerializableExtra("pool");
-        Toast.makeText(this, pool.getName(), Toast.LENGTH_SHORT);
 
         hookText();
     }

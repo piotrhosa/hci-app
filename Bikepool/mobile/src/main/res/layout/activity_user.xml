@@ -3,45 +3,40 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal" android:layout_width="245dp"
-        android:layout_height="337dp"
-        android:padding="30dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        <TextView android:text="bleeee"
+            android:layout_width="98dp"
+            android:layout_height="20dp"
+            android:id="@+id/user_name"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_below="@+id/rating_bar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:textAlignment="center" />
 
         <ImageView
             android:id="@+id/image_user"
             android:layout_width="232dp"
-            android:layout_height="358dp" />
+            android:layout_height="358dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <TextView android:text="@string/hello_world"
+        <RatingBar
+            android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/user_name" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <RatingBar
-        android:id="@+id/rating_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="4"
-        android:stepSize="1.0"
-        android:rating="2.0" />
+            android:numStars="4"
+            android:stepSize="1.0"
+            android:rating="2.0"
+            android:layout_gravity="center"
+            android:layout_below="@+id/image_user"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp" />
+    </RelativeLayout>
 
 
 </LinearLayout>
